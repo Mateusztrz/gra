@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nokia 3310 Retro</title>
+  <title>Retro SMS</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -28,6 +28,21 @@
         </div>
       </div>
     </section>
+    <div class="modal-overlay" id="emailModal" aria-hidden="true">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <h2 id="modalTitle">Zapisz e-mail</h2>
+        <p id="modalText">Podaj adres e-mail, aby zapisać czas pisania w bazie.</p>
+        <form id="emailForm">
+          <label for="emailInput">Adres e-mail</label>
+          <input id="emailInput" type="email" autocomplete="email" placeholder="twoj@email.pl" required />
+          <div class="modal-buttons">
+            <button type="submit" class="control-button">ZAPISZ</button>
+            <button type="button" class="control-button secondary" id="modalCancel">ANULUJ</button>
+          </div>
+          <p class="modal-status" id="modalStatus"></p>
+        </form>
+      </div>
+    </div>
     <input id="hiddenInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
     <section class="instructions">
       <h1>Retro SMS na telefonie</h1>

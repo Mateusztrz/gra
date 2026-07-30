@@ -39,50 +39,94 @@ const stopTimer = () => {
   timerInterval = null;
 };
 
-hiddenInput.addEventListener('input', (event) => {
-  currentText = event.target.value;
-  updateScreen();
-  if (currentText.length > 0) startTimer();
-});
-
-hiddenInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Backspace') {
+const handleKeyInput = (event) => {
+  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    event.preventDefault();
+    currentText += event.key;
+    hiddenInput.value = currentText;
+    updateScreen();
+    startTimer();
+    setHint('Wpisano znak');
+  } else if (event.key === 'Backspace') {
     event.preventDefault();
     currentText = currentText.slice(0, -1);
     hiddenInput.value = currentText;
     updateScreen();
     setHint('Usunięto znak');
   }
-});
-
-const appendCharacter = (char) => {
-  currentText += char;
-  hiddenInput.value = currentText;
-  updateScreen();
-  startTimer();
 };
 
-document.addEventListener('keydown', (event) => {
-  if (event.target === hiddenInput) return;
-  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
-    appendCharacter(event.key);
-    setHint('Wpisano znak');
-  } else if (event.key === 'Backspace') {
-    currentText = currentText.slice(0, -1);
-    hiddenInput.value = currentText;
+hiddenInput.addEventListener('input', (event) => {
+  if (event.target.value !== currentText) {
+    currentText = event.target.value;
     updateScreen();
-    setHint('Usunięto znak');
+    if (currentText.length > 0) startTimer();
   }
 });
 
-phoneScreen.addEventListener('click', () => {
+hiddenInput.addEventListener('keydown', handleKeyInput);
+
+const focusInput = () => {
   hiddenInput.focus();
   setHint('Wpisz wiadomość na klawiaturze');
-});
+};
+
+phoneScreen.addEventListener('click', focusInput);
+phoneScreen.addEventListener('touchstart', focusInput);
+
+const emailModal = document.getElementById('emailModal');
+const emailForm = document.getElementById('emailForm');
+const emailInput = document.getElementById('emailInput');
+const modalCancel = document.getElementById('modalCancel');
+const modalStatus = document.getElementById('modalStatus');
+
+const openModal = () => {
+  emailModal.classList.add('open');
+  emailModal.setAttribute('aria-hidden', 'false');
+  emailInput.focus();
+};
+
+const closeModal = () => {
+  emailModal.classList.remove('open');
+  emailModal.setAttribute('aria-hidden', 'true');
+  modalStatus.textContent = '';
+};
 
 btnSend.addEventListener('click', () => {
   stopTimer();
-  setHint('Wiadomość wysłana');
+  setHint('Czas zatrzymany. Wpisz e-mail, aby zapisać.');
+  openModal();
+});
+
+modalCancel.addEventListener('click', closeModal);
+
+emailForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const email = emailInput.value.trim();
+  if (!email) return;
+
+  modalStatus.textContent = 'Zapisywanie...';
+
+  try {
+    const response = await fetch('save-email.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, elapsedTime: statusTime.textContent })
+    });
+
+    const result = await response.json();
+    if (response.ok && result.success) {
+      modalStatus.textContent = 'E-mail zapisany.';
+      setHint('E-mail zapisany w bazie.');
+      setTimeout(() => {
+        closeModal();
+      }, 1200);
+    } else {
+      modalStatus.textContent = result.message || 'Błąd zapisu.';
+    }
+  } catch (error) {
+    modalStatus.textContent = 'Błąd połączenia.';
+  }
 });
 
 updateScreen();
