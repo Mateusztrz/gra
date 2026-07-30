@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retro telefon</title>
+  <title>Nokia 3310 Retro</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,25 +11,52 @@
     <section class="panel">
       <div class="phone">
         <div class="phone-top">
-          <div class="camera"></div>
           <div class="speaker"></div>
+          <div class="brand">NOKIA</div>
         </div>
-        <div class="screen">
-          <div class="screen-content" id="screenText">Wpisz coś poniżej...</div>
-        </div>
-        <div class="phone-bottom">
-          <div class="button-row">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="status-left">Nokia 3310</span>
+            <span class="status-right" id="statusTime">12:34</span>
           </div>
+          <div class="display-window">
+            <div class="screen-content" id="screenText">Wpisz wiadomość...</div>
+          </div>
+          <div class="screen-hint" id="screenHint">Naciśnij przycisk 2-9</div>
+        </div>
+        <div class="keypad">
+          <div class="button-row">
+            <button class="phone-button" data-key="1" data-chars="1">1</button>
+            <button class="phone-button" data-key="2" data-chars="ABC2">2<br><span>ABC</span></button>
+            <button class="phone-button" data-key="3" data-chars="DEF3">3<br><span>DEF</span></button>
+          </div>
+          <div class="button-row">
+            <button class="phone-button" data-key="4" data-chars="GHI4">4<br><span>GHI</span></button>
+            <button class="phone-button" data-key="5" data-chars="JKL5">5<br><span>JKL</span></button>
+            <button class="phone-button" data-key="6" data-chars="MNO6">6<br><span>MNO</span></button>
+          </div>
+          <div class="button-row">
+            <button class="phone-button" data-key="7" data-chars="PQRS7">7<br><span>PQRS</span></button>
+            <button class="phone-button" data-key="8" data-chars="TUV8">8<br><span>TUV</span></button>
+            <button class="phone-button" data-key="9" data-chars="WXYZ9">9<br><span>WXYZ</span></button>
+          </div>
+          <div class="button-row">
+            <button class="phone-button" data-key="*" data-chars="*">*</button>
+            <button class="phone-button" data-key="0" data-chars=" 0">0<br><span>SPACE</span></button>
+            <button class="phone-button" data-key="#" data-chars="#">#</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <button class="control-button" id="btnClear">CLR</button>
+          <button class="control-button" id="btnBack">C</button>
+          <button class="control-button" id="btnSend">SEND</button>
         </div>
       </div>
     </section>
-    <section class="input-panel">
-      <label for="messageInput">Tekst na ekranie:</label>
-      <textarea id="messageInput" rows="4" placeholder="Napisz tutaj...">Wpisz coś poniżej...</textarea>
-      <div class="hint">Tekst aktualizuje się od razu na ekranie telefonu.</div>
+    <section class="instructions">
+      <h1>Retro SMS na czas</h1>
+      <p>Naciśnij klawisz na telefonie, aby wpisać literę. Powtarzaj ten sam klawisz, aby zmienić znak.</p>
+      <p>Przycisk <strong>CLR</strong> czyści cały tekst, <strong>C</strong> usuwa ostatni znak.</p>
     </section>
   </main>
   <script src="script.js"></script>

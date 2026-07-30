@@ -9,25 +9,25 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: radial-gradient(circle at top, #1a2233 0%, #0b101a 45%, #05080f 100%);
-  color: #e0e6f4;
+  background: radial-gradient(circle at top, #1d2738 0%, #08101d 45%, #020509 100%);
+  color: #e4ebff;
 }
 
 .page {
-  width: min(100%, 900px);
-  padding: 32px;
+  width: min(100%, 940px);
+  padding: 28px;
   display: grid;
-  gap: 32px;
+  gap: 28px;
   align-items: start;
 }
 
 .phone {
-  width: 320px;
-  border-radius: 42px;
-  padding: 24px 18px 18px;
-  background: linear-gradient(180deg, #1e293b 0%, #111827 100%);
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+  width: 360px;
+  border-radius: 40px;
+  padding: 22px 16px 18px;
+  background: linear-gradient(180deg, #313b49 0%, #1c2430 100%);
+  border: 3px solid #4a5d7a;
+  box-shadow: 0 32px 72px rgba(0, 0, 0, 0.5);
   position: relative;
 }
 
@@ -35,123 +35,182 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 42px;
+  border-radius: 40px;
   pointer-events: none;
-  background: radial-gradient(circle at top center, rgba(255,255,255,0.08), transparent 36%);
+  background: radial-gradient(circle at top center, rgba(255,255,255,0.08), transparent 40%);
 }
 
 .phone-top {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   gap: 12px;
   margin-bottom: 16px;
 }
 
-.camera,
 .speaker {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-}
-
-.camera {
-  width: 14px;
-  height: 14px;
-}
-
-.speaker {
-  width: 90px;
+  width: 80px;
   height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12));
 }
 
-.screen {
-  width: 100%;
-  min-height: 390px;
-  padding: 20px;
-  background: linear-gradient(180deg, #12203b 0%, #0b1526 100%);
-  border-radius: 32px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), inset 0 12px 40px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
+.brand {
+  font-family: 'Arial', sans-serif;
+  color: #d2e3ff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
 }
 
-.screen::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent 30%, rgba(255,255,255,0.02));
-  pointer-events: none;
+.phone-screen {
+  background: linear-gradient(180deg, #a8c4ff 0%, #5682d0 15%, #1d2c4f 30%, #10204b 100%);
+  border-radius: 30px;
+  padding: 18px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), inset 0 10px 24px rgba(0,0,0,0.3);
 }
 
-.screen-content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  font-size: 20px;
-  line-height: 1.55;
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #e9efff;
+  margin-bottom: 12px;
+}
+
+.display-window {
+  min-height: 180px;
+  background: radial-gradient(circle at top, rgba(17, 41, 88, 0.95), rgba(7, 14, 29, 1) 70%);
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: inset 0 5px 12px rgba(0,0,0,0.35);
+  color: #c6d6ff;
   font-family: 'Courier New', Courier, monospace;
-  color: #c8d7ff;
+  font-size: 18px;
+  line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
 
-.phone-bottom {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.screen-content {
+  min-height: 130px;
+}
+
+.screen-hint {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.08);
+  color: #d9e3ff;
+  font-size: 13px;
+  text-align: center;
+}
+
+.keypad {
+  margin-top: 18px;
 }
 
 .button-row {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.button-row span {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.input-panel {
-  display: grid;
-  gap: 12px;
-}
-
-label {
-  font-size: 15px;
-  color: #a5b4fc;
-}
-
-textarea {
-  width: 100%;
-  min-height: 140px;
-  padding: 16px;
+.phone-button,
+.control-button {
+  flex: 1;
+  min-height: 58px;
+  border: none;
   border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  background: rgba(15, 23, 42, 0.95);
-  color: #f8fafc;
-  font-size: 16px;
-  line-height: 1.6;
-  resize: vertical;
+  background: linear-gradient(180deg, #4f6187 0%, #2e3c58 100%);
+  color: #f7f9ff;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.18);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
 }
 
-textarea:focus {
-  outline: none;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+.phone-button span,
+.phone-button::after {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: #c5d0ff;
+  margin-top: 4px;
 }
 
-.hint {
-  font-size: 14px;
-  color: #94a3b8;
+.phone-button:hover,
+.control-button:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #6e84a9 0%, #3c4d6e 100%);
 }
 
-@media (max-width: 520px) {
+.phone-button:active,
+.control-button:active {
+  transform: translateY(1px);
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.control-button {
+  min-height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #d1a664 0%, #a26b2d 100%);
+}
+
+.control-button#btnBack {
+  background: linear-gradient(180deg, #8b3e4b 0%, #5b1f2a 100%);
+}
+
+.control-button#btnSend {
+  background: linear-gradient(180deg, #3c8a5a 0%, #1f5f3a 100%);
+}
+
+.instructions {
+  max-width: 560px;
+  padding: 24px;
+  border-radius: 26px;
+  background: rgba(18, 27, 44, 0.95);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+}
+
+.instructions h1 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  color: #d9e3ff;
+}
+
+.instructions p {
+  margin: 10px 0;
+  color: #bdc9eb;
+  line-height: 1.65;
+}
+
+@media (max-width: 600px) {
   .page {
-    padding: 24px 16px;
+    padding: 18px;
   }
+
   .phone {
     width: 100%;
+  }
+
+  .button-row {
+    gap: 8px;
+  }
+
+  .phone-button,
+  .control-button {
+    min-height: 52px;
+    font-size: 16px;
   }
 }
