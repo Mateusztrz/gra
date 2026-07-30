@@ -12,17 +12,19 @@
       <div class="phone">
         <div class="phone-top">
           <div class="speaker"></div>
-          <div class="brand">NOKIA</div>
         </div>
         <div class="phone-screen">
           <div class="status-bar">
-            <span class="status-left">Nokia 3310</span>
-            <span class="status-right" id="statusTime">12:34</span>
+            <span class="status-left">Czas</span>
+            <span class="status-right" id="statusTime">0.0s</span>
           </div>
           <div class="display-window">
             <div class="screen-content" id="screenText">Wpisz wiadomość...</div>
           </div>
-          <div class="screen-hint" id="screenHint">Naciśnij przycisk 2-9</div>
+          <div class="screen-hint" id="screenHint">Dotknij ekranu i wpisz wiadomość</div>
+        </div>
+        <div class="control-row">
+          <button class="control-button" id="btnSend">WYŚLIJ</button>
         </div>
       </div>
     </section>
@@ -30,7 +32,7 @@
     <section class="instructions">
       <h1>Retro SMS na telefonie</h1>
       <p>Wpisuj wiadomość na fizycznej klawiaturze telefonu, a tekst pojawi się na ekranie.</p>
-      <p>Dotknij ekranu, aby ustawić fokus i zacząć wpisywać.</p>
+      <p>Timer zaczyna się przy pierwszym znaku i zatrzymuje po kliknięciu WYŚLIJ.</p>
     </section>
   </main>
   <script src="script.js"></script>
