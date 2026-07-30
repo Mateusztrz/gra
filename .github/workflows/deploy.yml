@@ -13,12 +13,12 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v4
     
-    - name: 📂 Copy files via SCP
+    - name: 📂 Copy files via SCP (SSH key)
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 40022
         source: "./"
         target: ${{ secrets.FTP_REMOTE_DIR }}
