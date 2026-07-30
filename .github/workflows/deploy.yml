@@ -23,7 +23,7 @@ jobs:
         # action expects 'server-dir' (not 'remote-dir')
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}
         protocol: ftp
-        log-level: debug
+        log-level: standard
         exclude: |
           .git*
           .github
