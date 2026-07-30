@@ -1,8 +1,16 @@
 <?php
 header('Content-Type: application/json');
 
-$input = json_decode(file_get_contents('php://input'), true);
+$contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+if (stripos($contentType, 'application/json') !== false) {
+    $input = json_decode(file_get_contents('php://input'), true);
+} else {
+    $input = $_POST;
+}
+
 if (!$input || empty($input['email']) || empty($input['elapsedTime'])) {
+    http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Niepoprawne dane.']);
     exit;
 }
@@ -11,6 +19,7 @@ $email = filter_var($input['email'], FILTER_VALIDATE_EMAIL);
 $elapsedTime = trim($input['elapsedTime']);
 
 if (!$email) {
+    http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Niepoprawny adres e-mail.']);
     exit;
 }

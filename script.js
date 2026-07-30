@@ -230,13 +230,23 @@ emailForm.addEventListener('submit', async (event) => {
   modalStatus.textContent = 'Zapisywanie...';
 
   try {
-    const response = await fetch('save-email.php', {
+    const response = await fetch('./save-email.php', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, elapsedTime: statusTime.textContent })
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ email, elapsedTime: statusTime.textContent })
     });
 
-    const result = await response.json();
+    const contentType = response.headers.get('Content-Type') || '';
+    let result = null;
+
+    if (contentType.includes('application/json')) {
+      result = await response.json();
+    } else {
+      const text = await response.text();
+      result = { success: false, message: text || `Błąd serwera ${response.status}` };
+    }
+
     if (response.ok && result.success) {
       modalStatus.textContent = 'E-mail zapisany.';
       setHint('E-mail zapisany w bazie.');
@@ -244,10 +254,11 @@ emailForm.addEventListener('submit', async (event) => {
         closeModal();
       }, 1200);
     } else {
-      modalStatus.textContent = result.message || 'Błąd zapisu.';
+      modalStatus.textContent = result.message || `Błąd zapisu (${response.status})`;
     }
   } catch (error) {
-    modalStatus.textContent = 'Błąd połączenia.';
+    modalStatus.textContent = 'Błąd połączenia: nie można osiągnąć serwera.';
+    console.error('save-email fetch error:', error);
   }
 });
 
