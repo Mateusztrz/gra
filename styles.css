@@ -22,13 +22,15 @@ body {
 }
 
 .phone {
-  width: 360px;
+  width: 100%;
+  max-width: 360px;
   border-radius: 40px;
   padding: 22px 16px 18px;
   background: linear-gradient(180deg, #29593c 0%, #1e3c2a 100%);
   border: 3px solid #8ec785;
   box-shadow: 0 32px 72px rgba(0, 0, 0, 0.45);
   position: relative;
+  margin: 0 auto;
 }
 
 .phone::before {
@@ -245,15 +247,44 @@ body {
 
 @media (max-width: 600px) {
   .page {
-    padding: 18px;
+    padding: 14px;
+    gap: 20px;
   }
 
   .phone {
     width: 100%;
+    max-width: 340px;
+    padding: 18px 14px 16px;
+    border-radius: 34px;
   }
 
-  .button-row {
-    gap: 8px;
+  .phone-screen {
+    padding: 16px;
+  }
+
+  .display-window {
+    min-height: 160px;
+    padding: 12px;
+  }
+
+  .screen-hint {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .control-row {
+    margin-top: 14px;
+  }
+
+  .control-button {
+    min-width: 100px;
+    min-height: 48px;
+    font-size: 15px;
+    border-radius: 16px;
+  }
+
+  .modal-content {
+    padding: 22px;
   }
 
   .phone-button,
