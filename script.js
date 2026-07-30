@@ -9,6 +9,24 @@ let currentText = '';
 let startTime = null;
 let timerInterval = null;
 let caretIndex = 0;
+// multi-tap variables for numeric keypad (Nokia-style)
+const multiTapMap = {
+  '2': 'abc',
+  '3': 'def',
+  '4': 'ghi',
+  '5': 'jkl',
+  '6': 'mno',
+  '7': 'pqrs',
+  '8': 'tuv',
+  '9': 'wxyz',
+  '0': ' '
+};
+let lastMultiKey = null;
+let lastMultiTime = 0;
+let lastMultiCharIndex = 0;
+let lastInsertedWasMulti = false;
+let lastInsertedPos = -1;
+const multiTapTimeout = 800; // ms
 
 const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -52,14 +70,47 @@ const stopTimer = () => {
 
 const handleKeyInput = (event) => {
   if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    // handle numeric multi-tap first
+    if (multiTapMap.hasOwnProperty(event.key)) {
+      event.preventDefault();
+      startTimer();
+      const now = Date.now();
+      const chars = multiTapMap[event.key];
+
+      if (event.key === lastMultiKey && (now - lastMultiTime) < multiTapTimeout && lastInsertedWasMulti && lastInsertedPos === caretIndex - 1) {
+        // cycle next character
+        lastMultiCharIndex = (lastMultiCharIndex + 1) % chars.length;
+        const newChar = chars[lastMultiCharIndex];
+        currentText = currentText.slice(0, caretIndex - 1) + newChar + currentText.slice(caretIndex);
+      } else {
+        // insert first char for this key
+        lastMultiCharIndex = 0;
+        const newChar = chars[lastMultiCharIndex];
+        currentText = currentText.slice(0, caretIndex) + newChar + currentText.slice(caretIndex);
+        caretIndex += 1;
+        lastInsertedWasMulti = true;
+        lastInsertedPos = caretIndex - 1;
+      }
+
+      lastMultiKey = event.key;
+      lastMultiTime = now;
+      hiddenInput.value = currentText;
+      updateScreen();
+      setHint('Wpisano znak (num)');
+      return;
+    }
+
+    // regular single-char input (physical keyboard)
     event.preventDefault();
-    // insert at caret
     currentText = currentText.slice(0, caretIndex) + event.key + currentText.slice(caretIndex);
     caretIndex += 1;
     hiddenInput.value = currentText;
     updateScreen();
     startTimer();
     setHint('Wpisano znak');
+    // reset multi-tap state
+    lastMultiKey = null;
+    lastInsertedWasMulti = false;
   } else if (event.key === 'Backspace') {
     event.preventDefault();
     if (caretIndex > 0) {
@@ -68,6 +119,9 @@ const handleKeyInput = (event) => {
       hiddenInput.value = currentText;
       updateScreen();
       setHint('Usunięto znak');
+      // reset multi-tap state if deletion affected last inserted
+      lastMultiKey = null;
+      lastInsertedWasMulti = false;
     }
   } else if (event.key === 'ArrowLeft') {
     event.preventDefault();
