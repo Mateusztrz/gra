@@ -23,7 +23,9 @@ jobs:
         # action expects 'server-dir' (not 'remote-dir')
         # ensure trailing slash — append '/' in case secret doesn't include it
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}/
-        protocol: ftp
+        protocol: sftp
+        # use SSH/SFTP port provided by panel
+        port: 40022
         log-level: standard
         exclude: |
           .git*
