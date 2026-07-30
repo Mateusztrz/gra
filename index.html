@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retro telefon</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="panel">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="camera"></div>
+          <div class="speaker"></div>
+        </div>
+        <div class="screen">
+          <div class="screen-content" id="screenText">Wpisz coś poniżej...</div>
+        </div>
+        <div class="phone-bottom">
+          <div class="button-row">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="input-panel">
+      <label for="messageInput">Tekst na ekranie:</label>
+      <textarea id="messageInput" rows="4" placeholder="Napisz tutaj...">Wpisz coś poniżej...</textarea>
+      <div class="hint">Tekst aktualizuje się od razu na ekranie telefonu.</div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
