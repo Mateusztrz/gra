@@ -21,7 +21,8 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./
         # action expects 'server-dir' (not 'remote-dir')
-        server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+        # ensure trailing slash — append '/' in case secret doesn't include it
+        server-dir: ${{ secrets.FTP_REMOTE_DIR }}/
         protocol: ftp
         log-level: standard
         exclude: |
