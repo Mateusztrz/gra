@@ -1,0 +1,10 @@
+<?php
+// Skopiuj ten plik do db-config.php i uzupełnij wartości.
+// Uwaga: NIE dodawaj db-config.php do repozytorium.
+
+$dbHost = 'sql178.lh.pl';
+$dbName = 'serwer401754_bazagra';
+$dbUser = 'serwer401754_bazagra';
+$dbPass = 'CHANGE_ME';
+
+?>

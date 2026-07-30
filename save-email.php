@@ -24,11 +24,22 @@ if (!$email) {
     exit;
 }
 
-// Dostosuj dane połączenia do serwera LH
-    $dbHost = 'sql178.lh.pl';
-$dbName = 'serwer401754_bazagra';
-$dbUser = 'serwer401754_bazagra';
-$dbPass = 'bo&UU-ImTVnI0Pr5';
+// Wczytaj dane połączenia z zewnętrznego pliku konfiguracyjnego (db-config.php)
+$configPath = __DIR__ . '/db-config.php';
+if (file_exists($configPath)) {
+    include $configPath; // oczekuje: $dbHost, $dbName, $dbUser, $dbPass
+} else {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Brak pliku konfiguracyjnego DB. Skopiuj db-config.php.example do db-config.php i uzupełnij dane.']);
+    exit;
+}
+
+// walidacja zmiennych konfiguracyjnych
+if (empty($dbHost) || empty($dbName) || empty($dbUser)) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Niepoprawna konfiguracja DB.']);
+    exit;
+}
 
 try {
     $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4", $dbUser, $dbPass, [
