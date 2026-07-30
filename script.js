@@ -8,9 +8,20 @@ const btnSend = document.getElementById('btnSend');
 let currentText = '';
 let startTime = null;
 let timerInterval = null;
+let caretIndex = 0;
+
+const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const updateScreen = () => {
-  screenText.textContent = currentText.length > 0 ? currentText : 'Wpisz wiadomość...';
+  if (currentText.length === 0) {
+    screenText.innerHTML = '<span class="placeholder">Wpisz wiadomość...</span>';
+    caretIndex = 0;
+    return;
+  }
+
+  const left = escapeHtml(currentText.slice(0, caretIndex));
+  const right = escapeHtml(currentText.slice(caretIndex));
+  screenText.innerHTML = left + '<span class="caret" aria-hidden="true"></span>' + right;
 };
 
 const setHint = (text) => {
@@ -42,23 +53,37 @@ const stopTimer = () => {
 const handleKeyInput = (event) => {
   if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
     event.preventDefault();
-    currentText += event.key;
+    // insert at caret
+    currentText = currentText.slice(0, caretIndex) + event.key + currentText.slice(caretIndex);
+    caretIndex += 1;
     hiddenInput.value = currentText;
     updateScreen();
     startTimer();
     setHint('Wpisano znak');
   } else if (event.key === 'Backspace') {
     event.preventDefault();
-    currentText = currentText.slice(0, -1);
-    hiddenInput.value = currentText;
+    if (caretIndex > 0) {
+      currentText = currentText.slice(0, caretIndex - 1) + currentText.slice(caretIndex);
+      caretIndex -= 1;
+      hiddenInput.value = currentText;
+      updateScreen();
+      setHint('Usunięto znak');
+    }
+  } else if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    caretIndex = Math.max(0, caretIndex - 1);
     updateScreen();
-    setHint('Usunięto znak');
+  } else if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    caretIndex = Math.min(currentText.length, caretIndex + 1);
+    updateScreen();
   }
 };
 
 hiddenInput.addEventListener('input', (event) => {
   if (event.target.value !== currentText) {
     currentText = event.target.value;
+    caretIndex = currentText.length;
     updateScreen();
     if (currentText.length > 0) startTimer();
   }
@@ -77,8 +102,45 @@ const focusInput = () => {
   setHint('Wpisz wiadomość na klawiaturze');
 };
 
-phoneScreen.addEventListener('click', focusInput);
-phoneScreen.addEventListener('touchstart', focusInput);
+// click inside display window should set caret position
+const displayWindow = document.querySelector('.display-window');
+
+const measureAvgCharWidth = () => {
+  const meas = document.createElement('span');
+  meas.style.visibility = 'hidden';
+  meas.style.position = 'absolute';
+  meas.style.whiteSpace = 'pre';
+  meas.style.fontFamily = window.getComputedStyle(screenText).fontFamily;
+  meas.textContent = 'm';
+  document.body.appendChild(meas);
+  const w = meas.getBoundingClientRect().width;
+  document.body.removeChild(meas);
+  return w || 8;
+};
+
+displayWindow.addEventListener('click', (e) => {
+  const rect = displayWindow.getBoundingClientRect();
+  const x = e.clientX - rect.left - 12; // account for padding
+  const avg = measureAvgCharWidth();
+  let idx = Math.round(Math.max(0, x) / avg);
+  idx = Math.min(idx, currentText.length);
+  caretIndex = idx;
+  focusInput();
+  updateScreen();
+});
+
+displayWindow.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  if (!touch) return;
+  const rect = displayWindow.getBoundingClientRect();
+  const x = touch.clientX - rect.left - 12;
+  const avg = measureAvgCharWidth();
+  let idx = Math.round(Math.max(0, x) / avg);
+  idx = Math.min(idx, currentText.length);
+  caretIndex = idx;
+  focusInput();
+  updateScreen();
+});
 
 const emailModal = document.getElementById('emailModal');
 const emailForm = document.getElementById('emailForm');

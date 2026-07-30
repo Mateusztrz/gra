@@ -96,6 +96,20 @@ body {
   overflow-wrap: break-word;
 }
 
+.display-window .caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: #eaf7e8;
+  vertical-align: bottom;
+  margin-left: 1px;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
 .screen-content {
   min-height: 130px;
 }
