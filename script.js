@@ -64,6 +64,12 @@ hiddenInput.addEventListener('input', (event) => {
   }
 });
 
+window.addEventListener('keydown', (event) => {
+  if (document.activeElement !== emailInput) {
+    handleKeyInput(event);
+  }
+});
+
 hiddenInput.addEventListener('keydown', handleKeyInput);
 
 const focusInput = () => {
