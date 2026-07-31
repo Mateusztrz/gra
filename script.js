@@ -5,6 +5,8 @@ const hiddenInput = document.getElementById('hiddenInput');
 const phoneScreen = document.querySelector('.phone-screen');
 const btnSend = document.getElementById('btnSend');
 
+const sampleText = 'ala ma kota i psa';
+
 let currentText = '';
 let startTime = null;
 let timerInterval = null;
@@ -31,15 +33,32 @@ const multiTapTimeout = 800; // ms
 const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const updateScreen = () => {
-  if (currentText.length === 0) {
-    screenText.innerHTML = '<span class="placeholder">Wpisz wiadomość...</span>';
-    caretIndex = 0;
-    return;
+  const maxLen = Math.max(sampleText.length, currentText.length);
+  let html = '';
+
+  for (let i = 0; i < maxLen; i++) {
+    if (i === caretIndex) {
+      html += '<span class="caret" aria-hidden="true"></span>';
+    }
+
+    if (i < currentText.length) {
+      const typedChar = currentText[i];
+      if (i < sampleText.length) {
+        const cls = typedChar === sampleText[i] ? 'char-correct' : 'char-incorrect';
+        html += `<span class="${cls}">${escapeHtml(typedChar)}</span>`;
+      } else {
+        html += escapeHtml(typedChar);
+      }
+    } else {
+      html += `<span class="char-pending">${escapeHtml(sampleText[i])}</span>`;
+    }
   }
 
-  const left = escapeHtml(currentText.slice(0, caretIndex));
-  const right = escapeHtml(currentText.slice(caretIndex));
-  screenText.innerHTML = left + '<span class="caret" aria-hidden="true"></span>' + right;
+  if (caretIndex === maxLen) {
+    html += '<span class="caret" aria-hidden="true"></span>';
+  }
+
+  screenText.innerHTML = html;
 };
 
 const setHint = (text) => {
@@ -68,16 +87,24 @@ const stopTimer = () => {
   timerInterval = null;
 };
 
+const digitFromKeyCode = (code) => (code >= 48 && code <= 57 ? String.fromCharCode(code) : null);
+
 const handleKeyInput = (event) => {
-  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+  let key = event.key;
+  if (typeof key !== 'string' || key.length !== 1) {
+    // some limited/older mobile browsers don't populate event.key reliably;
+    // fall back to the numeric keyCode for the physical digit keys.
+    key = digitFromKeyCode(event.keyCode ?? event.which);
+  }
+  if (key && key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
     // handle numeric multi-tap first
-    if (multiTapMap.hasOwnProperty(event.key)) {
+    if (multiTapMap.hasOwnProperty(key)) {
       event.preventDefault();
       startTimer();
       const now = Date.now();
-      const chars = multiTapMap[event.key];
+      const chars = multiTapMap[key];
 
-      if (event.key === lastMultiKey && (now - lastMultiTime) < multiTapTimeout && lastInsertedWasMulti && lastInsertedPos === caretIndex - 1) {
+      if (key === lastMultiKey && (now - lastMultiTime) < multiTapTimeout && lastInsertedWasMulti && lastInsertedPos === caretIndex - 1) {
         // cycle next character
         lastMultiCharIndex = (lastMultiCharIndex + 1) % chars.length;
         const newChar = chars[lastMultiCharIndex];
@@ -92,7 +119,7 @@ const handleKeyInput = (event) => {
         lastInsertedPos = caretIndex - 1;
       }
 
-      lastMultiKey = event.key;
+      lastMultiKey = key;
       lastMultiTime = now;
       hiddenInput.value = currentText;
       updateScreen();
@@ -102,7 +129,7 @@ const handleKeyInput = (event) => {
 
     // regular single-char input (physical keyboard)
     event.preventDefault();
-    currentText = currentText.slice(0, caretIndex) + event.key + currentText.slice(caretIndex);
+    currentText = currentText.slice(0, caretIndex) + key + currentText.slice(caretIndex);
     caretIndex += 1;
     hiddenInput.value = currentText;
     updateScreen();
