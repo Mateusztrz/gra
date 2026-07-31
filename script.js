@@ -149,8 +149,6 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
-hiddenInput.addEventListener('keydown', handleKeyInput);
-
 const focusInput = () => {
   hiddenInput.focus();
   setHint('Wpisz wiadomość na klawiaturze');
