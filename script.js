@@ -230,7 +230,7 @@ emailForm.addEventListener('submit', async (event) => {
   modalStatus.textContent = 'Zapisywanie...';
 
   try {
-    const response = await fetch('./save-email.php', {
+    const response = await fetch('/save-email', {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
