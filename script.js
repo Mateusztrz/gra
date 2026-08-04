@@ -94,7 +94,7 @@ const handleKeyInput = (event) => {
   if (typeof key !== 'string' || key.length !== 1) {
     // some limited/older mobile browsers don't populate event.key reliably;
     // fall back to the numeric keyCode for the physical digit keys.
-    key = digitFromKeyCode(event.keyCode ?? event.which);
+    key = digitFromKeyCode(event.keyCode || event.which);
   }
   if (key && key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
     // handle numeric multi-tap first
@@ -247,44 +247,42 @@ btnSend.addEventListener('click', () => {
 
 modalCancel.addEventListener('click', closeModal);
 
-emailForm.addEventListener('submit', async (event) => {
+emailForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const email = emailInput.value.trim();
   if (!email) return;
 
   modalStatus.textContent = 'Zapisywanie...';
 
-  try {
-    const response = await fetch('/save-email', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ email, elapsedTime: statusTime.textContent })
+  fetch('/save-email', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ email: email, elapsedTime: statusTime.textContent })
+  })
+    .then((response) => {
+      const contentType = response.headers.get('Content-Type') || '';
+      const parsed = contentType.indexOf('application/json') !== -1
+        ? response.json()
+        : response.text().then((text) => ({ success: false, message: text || ('Błąd serwera ' + response.status) }));
+
+      return parsed.then((result) => ({ ok: response.ok, status: response.status, result: result }));
+    })
+    .then((outcome) => {
+      if (outcome.ok && outcome.result.success) {
+        modalStatus.textContent = 'E-mail zapisany.';
+        setHint('E-mail zapisany w bazie.');
+        setTimeout(() => {
+          closeModal();
+        }, 1200);
+      } else {
+        modalStatus.textContent = outcome.result.message || ('Błąd zapisu (' + outcome.status + ')');
+      }
+    })
+    .catch((error) => {
+      modalStatus.textContent = 'Błąd połączenia: nie można osiągnąć serwera.';
+      console.error('save-email fetch error:', error);
     });
-
-    const contentType = response.headers.get('Content-Type') || '';
-    let result = null;
-
-    if (contentType.includes('application/json')) {
-      result = await response.json();
-    } else {
-      const text = await response.text();
-      result = { success: false, message: text || `Błąd serwera ${response.status}` };
-    }
-
-    if (response.ok && result.success) {
-      modalStatus.textContent = 'E-mail zapisany.';
-      setHint('E-mail zapisany w bazie.');
-      setTimeout(() => {
-        closeModal();
-      }, 1200);
-    } else {
-      modalStatus.textContent = result.message || `Błąd zapisu (${response.status})`;
-    }
-  } catch (error) {
-    modalStatus.textContent = 'Błąd połączenia: nie można osiągnąć serwera.';
-    console.error('save-email fetch error:', error);
-  }
 });
 
 updateScreen();
